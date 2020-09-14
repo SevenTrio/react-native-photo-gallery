@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ActivityIndicator, Button, View, ScrollView, StyleSheet, Image, FlatList, TouchableOpacity, Text } from 'react-native';
+import { ActivityIndicator, View, ScrollView, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as galleryActions from '../store/actions/gallery';
