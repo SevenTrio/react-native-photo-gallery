@@ -5,7 +5,7 @@ import {
 } from '../actions/gallery'
 
 const galleryInitialState = {
-  page: 0,
+  page: 1,
   per_page: 10,
   photos: {
     isFetching: false,
@@ -36,12 +36,12 @@ const gallery = (state = galleryInitialState, action) => {
     case RECEIVE_PHOTOS:
       return {
         ...state,
+        page: state.page + 1,
         photos: {
           ...state.photos,
           isFetching: false,
           isError: false,
           items: [...state.photos.items, ...action.photos],
-          lastUpdated: action.receivedAt
         }
       }
     default:

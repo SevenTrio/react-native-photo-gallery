@@ -1,42 +1,94 @@
 import React, { useEffect } from 'react'
-import { Button, View, Text } from 'react-native';
+import { ActivityIndicator, Button, View, ScrollView, StyleSheet, Image, FlatList, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as galleryActions from '../store/actions/gallery';
 
-const HomeScreen = ({ navigation, gallery, fetchPhotos }) => {
+import Gallery from '../components/Gallery'
+
+const GalleryScreen = ({ navigation, gallery, fetchPhotos }) => {
   useEffect(() => {
     fetchPhotos();
-  }, [])
+  }, []);
+
+  const handlePhotoPress = (photo) => {
+    navigation.navigate('Photo', photo);
+  }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      { gallery.photos.items.length ? gallery.photos.items.map((item, index) => <Text key={index}>{item.id}</Text>) : null}
+    <ScrollView>
+      <View style={styles.screenContainer}>
 
-      {
-        gallery.photos.isFetching
-          ?
-          <Text>Loading...</Text>
-          :
-          null
-      }
-      {
-        (gallery.photos.isError && !gallery.photos.isFetching)
-          ?
-          <Text>Error</Text>
-          :
-          null
-      }
+        <Gallery photos={gallery.photos} onPhotoPress={handlePhotoPress} />
 
-      <Button
-        title="Загрузить больше фотографий"
-        onPress={() => {
-          fetchPhotos();
-        }}
-      />
-    </View>
+        {gallery.photos.isFetching && <Loading />}
+
+        {gallery.photos.isError && !gallery.photos.isFetching && <Error />}
+
+        <ShowMoreButton onPress={() => fetchPhotos()} />
+
+      </View>
+    </ScrollView>
   );
 }
+
+const Loading = () => {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#4444ff" />
+    </View>
+  )
+}
+
+const Error = () => {
+  return (
+    <View style={styles.errorContainer}>
+      <Text style={styles.errorText}>Упс.. Произошла ошибка, пожалуйста, попробуйте позже..</Text>
+    </View>
+  )
+}
+
+const ShowMoreButton = ({ onPress }) => {
+  return (
+    <TouchableOpacity
+      style={styles.showMoreButton}
+      onPress={onPress}
+    >
+      <Text style={styles.showMoreButtonText}>Загрузить больше фотографий</Text>
+    </TouchableOpacity>
+  )
+}
+
+const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    padding: 5,
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    marginVertical: 32,
+  },
+  errorContainer: {
+    marginVertical: 32,
+  },
+  errorText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#ff0000',
+  },
+  showMoreButton: {
+    alignItems: "center",
+    marginVertical: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#0059ff",
+    borderRadius: 16,
+  },
+  showMoreButtonText: {
+    color: '#ffffff'
+  }
+});
+
 
 const mapStateToProps = ({ gallery }) => ({
   gallery
@@ -49,4 +101,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(HomeScreen);
+)(GalleryScreen);
