@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ActivityIndicator, View, ScrollView, StyleSheet, Image, Text } from 'react-native';
 import { Dimensions } from 'react-native';
-import { ucFirst } from '../utils'
+import { ucFirst } from '../utils';
 
 const PhotoScreen = ({ route }) => {
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,6 @@ const PhotoScreen = ({ route }) => {
           />
 
           {loading && <Loading />}
-
         </View>
 
         <View style={{ ...styles.text, maxWidth: win.width }}>
